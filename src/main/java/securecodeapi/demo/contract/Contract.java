@@ -67,6 +67,7 @@ public class Contract {
 
             if(JsonNodeType.OBJECT.equals(recievedInstance.getNodeType())) {
                 Map<String, Object> recievedInstanceMap = BodyManager.toMap(recievedInstance);
+                this.verifyIfObjectContainsAllAttributes(recievedInstanceMap);
                 recievedInstanceMap.forEach(this::validateKey);
             } else if (JsonNodeType.ARRAY.equals(recievedInstance.getNodeType())) {
                 recievedInstance.forEach(this::validateObject);
@@ -74,6 +75,14 @@ public class Contract {
             if(this.objectHasInvalidAttributes()) {
                 throw new InvalidObjectException("O objeto recebido recebido é inválido.", invalidAttributes);
             }
+        }
+
+        private void verifyIfObjectContainsAllAttributes(Map<String, Object> recievedInstance) {
+            contractSpecification.forEach((key, value) -> {
+                if(!recievedInstance.containsKey(key)) {
+                    throw new InvalidObjectException("O objeto não possui todos os atributos definidos no contrato");
+                }
+            } );
         }
 
         private void validateKey(String key, Object value) {
