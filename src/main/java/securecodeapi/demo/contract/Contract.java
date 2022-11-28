@@ -1,6 +1,9 @@
 package securecodeapi.demo.contract;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeType;
 import lombok.Getter;
+import securecodeapi.demo.bodymanagement.BodyManager;
 import securecodeapi.demo.exceptions.InvalidObjectException;
 
 import java.util.HashMap;
@@ -22,10 +25,18 @@ public class Contract {
     public HashMap<String, Class<?>> createContractSpecification(HashMap<String, String> newContractSpecification) {
 
         newContractSpecification.forEach((key, value) -> {
-            this.contractSpecification.put(key, Type.getEquivalentType(value));
+            this.contractSpecification.put(key, Type.getEquivalentTypeByName(value));
         });
 
         return this.contractSpecification;
+    }
+
+    public void validateObject(JsonNode recievedInstance) {
+        this.getValidation().validateObject(recievedInstance);
+    }
+
+    public void validateContract(HashMap<String, String> newContractSpecification) {
+        this.getValidation().validateContract(newContractSpecification);
     }
 
     class Validation {
@@ -39,7 +50,7 @@ public class Contract {
             this.invalidContractAttributes = new HashMap<String, Object>();
         }
 
-        void validateContract(HashMap<String, String> newContractSpecification) {
+        private void validateContract(HashMap<String, String> newContractSpecification) {
             newContractSpecification.forEach(this::validateContractKey);
             if(this.contractHasInvalidAttributes()) {
                 throw new InvalidObjectException("O contrato recebido é inválido.", invalidContractAttributes);
@@ -47,13 +58,19 @@ public class Contract {
         }
 
         private void validateContractKey(String key, String value) {
-            if(!Type.typeExists(value)) {
+            if(!Type.primitiveTypeExistsByName(value)) {
                 this.addInvalidContractKey(key, value);
             }
         }
 
-        public void validateObject(Map<String, Object> recievedInstance) {
-            recievedInstance.forEach(this::validateKey);
+        private void validateObject(JsonNode recievedInstance) {
+
+            if(JsonNodeType.OBJECT.equals(recievedInstance.getNodeType())) {
+                Map<String, Object> recievedInstanceMap = BodyManager.toMap(recievedInstance);
+                recievedInstanceMap.forEach(this::validateKey);
+            } else if (JsonNodeType.ARRAY.equals(recievedInstance.getNodeType())) {
+                recievedInstance.forEach(this::validateObject);
+            }
             if(this.objectHasInvalidAttributes()) {
                 throw new InvalidObjectException("O objeto recebido recebido é inválido.", invalidAttributes);
             }

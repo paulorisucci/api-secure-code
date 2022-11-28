@@ -1,12 +1,9 @@
 package securecodeapi.demo.cryptography;
 
-import lombok.Getter;
 import securecodeapi.demo.cryptography.aes.AesCrypter;
-import securecodeapi.demo.cryptography.aes.AesKeyGenerator;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,9 +28,9 @@ public class ObjectCrypter {
     public static HashMap<String, String> decryptObjectValuesUsingAes(String algorithm, Map<String, String> recievedObject, SecretKey secretKey,
                                                                       IvParameterSpec ivParameterSpec) {
 
-        final var encryptedObject = new HashMap<>(recievedObject);
+        final var decryptedObject = new HashMap<>(recievedObject);
 
-        encryptedObject.replaceAll((key, value) -> {
+        decryptedObject.replaceAll((key, value) -> {
             try {
                 return AesCrypter.decrypt(algorithm, value, secretKey, ivParameterSpec);
             } catch (Exception e) {
@@ -42,6 +39,6 @@ public class ObjectCrypter {
             }
         });
 
-        return encryptedObject;
+        return decryptedObject;
     }
 }

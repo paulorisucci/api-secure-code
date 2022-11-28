@@ -4,7 +4,7 @@ import securecodeapi.demo.exceptions.TypeNotFoundException;
 
 import java.util.Arrays;
 
-enum Type {
+public enum Type {
     BOOLEAN("boolean", Boolean.class),
     BYTE("byte", Byte.class),
     SHORT("short", Short.class),
@@ -23,7 +23,7 @@ enum Type {
         this.equivalentType = equivalentType;
     }
 
-    public static Class<?> getEquivalentType(String name) {
+    public static Class<?> getEquivalentTypeByName(String name) {
         Type foundType = Arrays.stream(Type.values())
                 .filter(type -> type.getName().equalsIgnoreCase(name))
                 .findFirst()
@@ -31,7 +31,7 @@ enum Type {
         return foundType.getEquivalentType();
     }
 
-    public static boolean typeExists(String typeName) {
+    public static boolean primitiveTypeExistsByName(String typeName) {
         return Arrays.stream(Type.values())
                 .anyMatch(type -> type.getName().equals(typeName));
     }
