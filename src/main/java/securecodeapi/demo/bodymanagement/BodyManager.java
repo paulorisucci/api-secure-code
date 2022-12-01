@@ -19,6 +19,24 @@ public class BodyManager {
         return (HashMap<String, Object>) result;
     }
 
+    public static HashMap<String, String> toMapWithStringValues(JsonNode node) {
+        final var result = BodyConverter.convert(node);
+
+        if(Objects.isNull(result) || !Objects.equals(result.getClass(), HashMap.class)) {
+            throw new InvalidObjectException("O corpo da requisição não é válido");
+        }
+
+        final HashMap<String, String> resultMap = (HashMap<String, String>) result;
+
+        try {
+            resultMap.replaceAll((key, value) -> String.valueOf(value));
+        } catch (ClassCastException exc) {
+            exc.printStackTrace();
+            throw new InvalidObjectException("O body deve conter apenas atributos textuais");
+        }
+        return resultMap;
+    }
+
     public static ArrayList<?> toList(JsonNode node) {
         Object result = BodyConverter.convert(node);
 

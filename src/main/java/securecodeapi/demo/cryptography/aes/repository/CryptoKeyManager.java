@@ -89,22 +89,4 @@ public class CryptoKeyManager {
         return new IvParameterSpec(encoded);
     }
 
-    public static void main(String[] args) throws NoSuchAlgorithmException, IOException, InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
-        CryptoKeyManager manager = new CryptoKeyManager();
-        manager.saveKey();
-        manager.saveIv();
-
-        String initialEncrypt = AesCrypter.encrypt("AES/CBC/PKCS5Padding", "paulo", manager.getSecretKey(), manager.getIvParameterSpec());
-        String initialDecrypt = AesCrypter.decrypt("AES/CBC/PKCS5Padding", initialEncrypt, manager.getSecretKey(), manager.getIvParameterSpec());
-
-        String finalEncrypt = AesCrypter.encrypt("AES/CBC/PKCS5Padding", "paulo", manager.loadKey(), manager.loadIv());
-        String finalDecrypt = AesCrypter.decrypt("AES/CBC/PKCS5Padding", finalEncrypt, manager.loadKey(), manager.loadIv());
-
-
-        System.out.println(initialEncrypt);
-        System.out.println(initialDecrypt);
-        System.out.println(finalEncrypt);
-        System.out.println(finalDecrypt);
-
-    }
 }

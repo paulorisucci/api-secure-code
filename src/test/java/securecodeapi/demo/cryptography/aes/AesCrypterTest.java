@@ -21,10 +21,9 @@ public class AesCrypterTest {
         final var input = "any string";
         final var secretKey = AesKeyGenerator.generateKey(BLOCK_SIZE);
         final var iv = AesKeyGenerator.generateIv();
-        final var chosenAlgorithm = "AES/CBC/PKCS5Padding";
 
-        final var cipherText = AesCrypter.encrypt(chosenAlgorithm, input, secretKey, iv);
-        final var plainText = AesCrypter.decrypt(chosenAlgorithm, cipherText, secretKey, iv);
+        final var cipherText = AesCrypter.encrypt(input, secretKey, iv);
+        final var plainText = AesCrypter.decrypt(cipherText, secretKey, iv);
 
         assertThat(plainText).isEqualTo(input);
     }

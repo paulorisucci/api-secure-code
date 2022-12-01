@@ -1,27 +1,31 @@
 package securecodeapi.demo.cryptography;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 import securecodeapi.demo.cryptography.aes.repository.CryptoRepository;
 
-import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-
 @Service
-@AllArgsConstructor
 public class CryptoService {
 
     private final CryptoRepository cryptoRepository;
 
-    public HashMap<String, String> encryptAES(HashMap<String, String> recievedObject) throws NoSuchAlgorithmException {
+    private final ObjectCrypter objectCrypter;
 
-        return ObjectCrypter.encryptObjectValuesUsingAes("AES/CBC/PKCS5Padding", recievedObject,
-                this.cryptoRepository.getSecretKey(), cryptoRepository.getIvParameter());
+    public CryptoService(CryptoRepository repository) {
+        this.cryptoRepository = repository;
+        this.objectCrypter = new ObjectCrypter(new ObjectMapper());
     }
 
-    public HashMap<String, String> decryptAES(HashMap<String, String> recievedObject) throws NoSuchAlgorithmException {
+    public JsonNode encryptAES(JsonNode recievedObject) {
 
-        return ObjectCrypter.decryptObjectValuesUsingAes("AES/CBC/PKCS5Padding", recievedObject,
-                this.cryptoRepository.getSecretKey(), cryptoRepository.getIvParameter());
+        return objectCrypter.encryptObjectValuesUsingAes(recievedObject, this.cryptoRepository.getSecretKey(),
+                cryptoRepository.getIvParameter());
+    }
+
+    public JsonNode decryptAES(JsonNode recievedObject) {
+
+        return objectCrypter.decryptObjectValuesUsingAes(recievedObject, this.cryptoRepository.getSecretKey(),
+                cryptoRepository.getIvParameter());
     }
 }

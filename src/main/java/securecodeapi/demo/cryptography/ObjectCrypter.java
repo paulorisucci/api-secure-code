@@ -1,44 +1,67 @@
 package securecodeapi.demo.cryptography;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeType;
+import lombok.AllArgsConstructor;
+import securecodeapi.demo.bodymanagement.BodyManager;
 import securecodeapi.demo.cryptography.aes.AesCrypter;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
-import java.util.HashMap;
-import java.util.Map;
 
+@AllArgsConstructor
 public class ObjectCrypter {
 
-    public static HashMap<String, String> encryptObjectValuesUsingAes(String algorithm, Map<String, String> recievedObject, SecretKey secretKey,
+    private final ObjectMapper mapper;
+
+    public JsonNode encryptObjectValuesUsingAes(JsonNode recievedObject, SecretKey secretKey,
                                                                       IvParameterSpec ivParameterSpec) {
-        final var encryptedObject = new HashMap<>(recievedObject);
+
+        if(JsonNodeType.ARRAY.equals(recievedObject.getNodeType())) {
+
+            ArrayNode arrayNode = this.mapper.createArrayNode();
+            recievedObject.forEach( nodeObj -> arrayNode.add(this.encryptObjectValuesUsingAes(nodeObj, secretKey, ivParameterSpec)));
+            return arrayNode;
+        }
+
+        final var encryptedObject = BodyManager.toMapWithStringValues(recievedObject);
 
         encryptedObject.replaceAll((key, value) -> {
             try {
-                return AesCrypter.encrypt(algorithm, value, secretKey, ivParameterSpec);
+                return AesCrypter.encrypt(value, secretKey, ivParameterSpec);
             } catch (Exception e) {
                 e.printStackTrace();
                 return value;
             }
         });
 
-        return encryptedObject;
+        return this.mapper.convertValue(encryptedObject, JsonNode.class);
+
     }
 
-    public static HashMap<String, String> decryptObjectValuesUsingAes(String algorithm, Map<String, String> recievedObject, SecretKey secretKey,
+    public JsonNode decryptObjectValuesUsingAes(JsonNode recievedObject, SecretKey secretKey,
                                                                       IvParameterSpec ivParameterSpec) {
 
-        final var decryptedObject = new HashMap<>(recievedObject);
+        if(JsonNodeType.ARRAY.equals(recievedObject.getNodeType())) {
+
+            ArrayNode arrayNode = this.mapper.createArrayNode();
+            recievedObject.forEach( nodeObj -> arrayNode.add(decryptObjectValuesUsingAes(nodeObj, secretKey, ivParameterSpec)));
+            return arrayNode;
+        }
+
+        final var decryptedObject = BodyManager.toMapWithStringValues(recievedObject);
 
         decryptedObject.replaceAll((key, value) -> {
             try {
-                return AesCrypter.decrypt(algorithm, value, secretKey, ivParameterSpec);
+                return AesCrypter.decrypt(value, secretKey, ivParameterSpec);
             } catch (Exception e) {
                 e.printStackTrace();
                 return value;
             }
         });
 
-        return decryptedObject;
+        return this.mapper.convertValue(decryptedObject, JsonNode.class);
     }
 }

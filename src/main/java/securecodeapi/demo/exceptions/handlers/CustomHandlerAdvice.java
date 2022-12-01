@@ -18,9 +18,9 @@ public class CustomHandlerAdvice {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidObjectException(Exception e) {
+    public ResponseEntity<ErrorResponse> handleInvalidObjectException() {
         HttpStatus status = HttpStatus.BAD_REQUEST;
 
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage()), status);
+        return new ResponseEntity<>(new ErrorResponse(status, "O corpo da requisição é inválido"), status);
     }
 }
