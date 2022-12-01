@@ -10,20 +10,25 @@ import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 @RestController
-@RequestMapping(value = "/contract", produces = {MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(value = "/contracts", produces = {MediaType.APPLICATION_JSON_VALUE})
 @AllArgsConstructor
 public class ContractController {
 
     private ContractService contractService;
 
     @PostMapping("/{id}")
-    public ResponseEntity<?> saveContract(@PathVariable String id,
+    public ResponseEntity<HashMap<String, String>> saveContract(@PathVariable String id,
                                                 @RequestBody HashMap<String, String> contract) {
         return ResponseEntity.ok(this.contractService.save(id, contract));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<HashMap<String, String>> getContract(@PathVariable String id) throws ExecutionException, InterruptedException {
+        return ResponseEntity.ok(this.contractService.findById(id));
+    }
+
     @PostMapping("/{id}/validate")
-    public ResponseEntity<?> validateContract(@PathVariable String id, @RequestBody JsonNode recievedObject)
+    public ResponseEntity<Void> validateContract(@PathVariable String id, @RequestBody JsonNode recievedObject)
             throws ExecutionException, InterruptedException {
         this.contractService.validate(id, recievedObject);
         return ResponseEntity.ok().build();
