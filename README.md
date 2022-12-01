@@ -113,11 +113,11 @@ Ou, contendo uma lista de objetos a serem criptografados:
 
 [
   {
-    "username": "joao123@email.com",
+    "email": "joao123@email.com",
     "senha": "IVJANdvjsl88&*(&"
   },
   {
-    "nome": "maria@email.com",
+    "email": "maria@email.com",
     "senha": ")(*VEWU1JK#$c32"
   }
 ]
