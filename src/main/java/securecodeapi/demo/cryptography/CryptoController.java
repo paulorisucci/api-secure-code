@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
 
 
 @RestController
@@ -21,14 +20,28 @@ public class CryptoController {
     private CryptoService cryptoService;
 
     @PostMapping(value = "/aes/encrypt-values")
-    public ResponseEntity<JsonNode> encryptAES(@RequestBody JsonNode recievedObject)
+    public ResponseEntity<JsonNode> encryptAESValues(@RequestBody JsonNode recievedObject)
             throws NoSuchAlgorithmException {
         return ResponseEntity.ok(cryptoService.encryptAES(recievedObject));
     }
 
     @PostMapping(value = "/aes/decrypt-values")
-    public ResponseEntity<JsonNode> decryptAES(@RequestBody JsonNode recievedObject)
+    public ResponseEntity<JsonNode> decryptAESValues(@RequestBody JsonNode recievedObject)
             throws NoSuchAlgorithmException {
         return ResponseEntity.ok(cryptoService.decryptAES(recievedObject));
+    }
+
+    @PostMapping(value = "/aes/encrypt-body")
+    public ResponseEntity<String> encryptAESBody(@RequestBody JsonNode recievedObject) {
+
+        String encryptedObject = cryptoService.encryptFullObjectAES(recievedObject);
+        return ResponseEntity.ok(encryptedObject);
+    }
+
+    @PostMapping(value = "/aes/decrypt-body")
+    public ResponseEntity<JsonNode> decryptAESBody(@RequestBody String encryptedObject) {
+
+        JsonNode decryptedObject = cryptoService.decryptFullObjectAES(encryptedObject);
+        return ResponseEntity.ok(decryptedObject);
     }
 }

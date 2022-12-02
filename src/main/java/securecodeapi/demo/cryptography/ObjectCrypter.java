@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import lombok.AllArgsConstructor;
 import securecodeapi.demo.bodymanagement.BodyManager;
 import securecodeapi.demo.cryptography.aes.AesCrypter;
+import securecodeapi.demo.exceptions.InvalidObjectException;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
@@ -63,5 +64,27 @@ public class ObjectCrypter {
         });
 
         return this.mapper.convertValue(decryptedObject, JsonNode.class);
+    }
+
+    public String encryptObjectUsingAes(JsonNode recievedObject, SecretKey secretKey, IvParameterSpec ivParameterSpec) {
+        String recievedObjectString = recievedObject.toString();
+
+        try {
+            return AesCrypter.encrypt(recievedObjectString, secretKey, ivParameterSpec);
+        } catch (Exception e){
+            e.printStackTrace();
+            return recievedObjectString;
+        }
+
+    }
+
+    public JsonNode decryptObjectUsingAes(String encryptedObject, SecretKey secretKey, IvParameterSpec ivParameterSpec) {
+        try {
+            String decryptedString = AesCrypter.decrypt(encryptedObject, secretKey, ivParameterSpec);
+            return mapper.readTree(decryptedString);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InvalidObjectException("A string não é um objeto criptografado");
+        }
     }
 }
