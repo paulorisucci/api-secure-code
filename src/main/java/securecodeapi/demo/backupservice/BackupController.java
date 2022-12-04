@@ -27,6 +27,8 @@ public class BackupController {
 
     static final String BASE_PATH = "/api/backup";
 
+    private static final String DOWNLOAD_BASE_PATH = BASE_PATH + "/downloadFile/";
+
     private final BackupService backupService;
 
     private final static String DEFAULT_CONTENT_TYPE = "application/octet-stream";
@@ -35,7 +37,7 @@ public class BackupController {
     public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file) {
         String fileName = backupService.storeFile(file);
 
-        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/downloadFile/")
+        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath().path(DOWNLOAD_BASE_PATH)
                 .path(fileName)
                 .toUriString();
 
