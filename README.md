@@ -12,10 +12,10 @@ de valores ou objetos inteiros, backup de diretórios e autenticação de usuár
 * POST /contract/{id}/validate
 
 ### Criptografar os valores de objetos JSON:
-* POST /cryptography/aes/encrypt-values
+* POST /cryptography/sync/encrypt-values
 
 ### Descriptografar os valores de objetos JSON:
-* POST /cryptography/aes/decrypt-values
+* POST /cryptography/sync/decrypt-values
 
 ## Como usar?
 
@@ -90,7 +90,7 @@ presente no contrato, o mesmo retorna um erro 400.
 
 ### Criptografar os valores de objetos JSON:
 ```
-Envie uma requisição POST para o endpoint /cryptography/aes/encrypt-values com o body da requisição contendo um
+Envie uma requisição POST para o endpoint /cryptography/sync/encrypt-values com o body da requisição contendo um
 objeto ou lista JSON a ter seus valores criptografados
 
 Exemplo: Deseja-se criptografar os dados cadastrais de uma pessoa. Sabe-se que seus dados cadastrais são um email
@@ -100,7 +100,7 @@ Então, enviariamos uma requisição para criptografar esses dois valores.
 
 A requisição seria da seguinte forma:
 
-POST {URL}:{PORT}/cryptography/aes/encrypt-values
+POST {URL}:{PORT}/cryptography/sync/encrypt-values
 
 BODY:
 
@@ -137,10 +137,10 @@ Exemplo de resposta:
 
 ### Descriptografar os valores de objetos JSON:
 ```
-Envie uma requisição POST para o endpoint /cryptography/aes/decrypt-values com o body da requisição contendo um
+Envie uma requisição POST para o endpoint /cryptography/sync/decrypt-values com o body da requisição contendo um
 objeto ou lista JSON a ter seus valores descriptografados.
 
-Os valores precisam ter sido criptografados anteriormente pelo endpoint /cryptography/aes/encrypt-values.
+Os valores precisam ter sido criptografados anteriormente pelo endpoint /cryptography/sync/encrypt-values.
 
 Exemplo: Deseja-se descriptografar os dados cadastrais de uma pessoa. Sabe-se que seus dados cadastrais são um email
 e uma senha.
@@ -149,7 +149,7 @@ Então, enviariamos uma requisição para descriptografar esses dois valores.
 
 A requisição seria da seguinte forma:
 
-POST {URL}:{PORT}/cryptography/aes/decrypt-values
+POST {URL}:{PORT}/cryptography/sync/decrypt-values
 
 BODY:
 

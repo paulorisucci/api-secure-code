@@ -3,7 +3,7 @@ package securecodeapi.demo.contract;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.cloud.firestore.Firestore;
 import org.springframework.stereotype.Service;
-import securecodeapi.demo.contract.firestore.FirebaseInitialization;
+import securecodeapi.demo.firestore.FirebaseInitialization;
 
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;

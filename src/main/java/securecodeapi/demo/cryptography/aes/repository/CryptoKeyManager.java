@@ -2,26 +2,18 @@ package securecodeapi.demo.cryptography.aes.repository;
 
 import lombok.Getter;
 import org.apache.commons.codec.DecoderException;
-import securecodeapi.demo.cryptography.aes.AesCrypter;
 import securecodeapi.demo.cryptography.aes.AesKeyGenerator;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import static org.apache.commons.codec.binary.Hex.*;
 import static org.apache.commons.io.FileUtils.*;
 import static org.apache.commons.io.FileUtils.readFileToString;
 
 import java.io.*;
-import java.util.HashMap;
 import java.util.Objects;
-import java.util.function.BiFunction;
 
 @Getter
 public class CryptoKeyManager {
